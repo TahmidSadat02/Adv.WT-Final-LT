@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import CourseTag from './CourseTag';
-import StatBadge from './StatBadge';
+import StatBadge from './StateBadge';
 
 export default function StudentCard({ name, id, avatar, gpa, major, courses }) {
   // Using the CSS variables we defined earlier to keep styling consistent!

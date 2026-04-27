@@ -1,14 +1,14 @@
 import DashboardHeader from './components/DashboardHeader';
 import StudentCard from './components/StudentCard';
-import './App.css'; // This imports the CSS variables we made earlier
+import './App.css'; 
+import { useState, useEffect } from 'react';
 
-export default function App() {
-  // Simulating a database of students
-  const studentData = [
+  
+  const MOCK_DB = [
     {
       id: "S-1001",
       name: "Alice Johnson",
-      avatar: "https://i.pravatar.cc/150?img=1",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alice",
       major: "Computer Science",
       gpa: 3.8,
       courses: [
@@ -19,7 +19,7 @@ export default function App() {
     {
       id: "S-1002",
       name: "Bob Smith",
-      avatar: "https://i.pravatar.cc/150?img=11",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
       major: "Data Science",
       gpa: 3.5,
       courses: [
@@ -30,7 +30,7 @@ export default function App() {
     {
       id: "S-1003",
       name: "Charlie Davis",
-      avatar: "https://i.pravatar.cc/150?img=12",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie",
       major: "Software Engineering",
       gpa: 3.9,
       courses: [
@@ -41,7 +41,7 @@ export default function App() {
     {
       id: "S-1004",
       name: "Diana Prince",
-      avatar: "https://i.pravatar.cc/150?img=5",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Diana",
       major: "Cybersecurity",
       gpa: 3.7,
       courses: [
@@ -51,26 +51,36 @@ export default function App() {
     }
   ];
 
+  export default function App() {
+
+  const [students, setStudents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTimer = setTimeout(() => {
+      setStudents(MOCK_DB);    
+      setIsLoading(false); 
+    }, 1500);
+
+    return () => clearTimeout(fetchTimer);
+  }, []);
+
   return (
     <div>
-      {/* Passing data to the Header via props */}
       <DashboardHeader 
         title="Student Dashboard" 
         tagline="Manage and view student records" 
       />
-      
-      {/* Main content area */}
+    
       <main style={{ padding: 'var(--spacing-lg) 40px' }}>
         
-        {/* A simple CSS grid to make the cards sit side-by-side nicely */}
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
           gap: 'var(--spacing-lg)' 
         }}>
           
-          {/* Looping over the array to render 4 cards */}
-          {studentData.map((student) => (
+          {students.map((student) => (
             <StudentCard 
               key={student.id}
               id={student.id}
