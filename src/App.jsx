@@ -2,6 +2,7 @@ import DashboardHeader from './components/DashboardHeader';
 import StudentCard from './components/StudentCard';
 import './App.css'; 
 import { useState, useEffect } from 'react';
+import SearchBar from './components/SearchBar';
 
 
   
@@ -83,6 +84,12 @@ import { useState, useEffect } from 'react';
       />
     
       <main style={{ padding: 'var(--spacing-lg) 40px' }}>
+        {!isLoading && (
+          <SearchBar 
+            searchQuery={searchQuery} 
+            onSearchChange={setSearchQuery} 
+          />
+        )}
         {isLoading ? (
           <div style={{ textAlign: 'center', padding: '40px', fontSize: '1.2rem', color: 'var(--text-muted)' }}>
             Loading student data...
@@ -105,7 +112,9 @@ import { useState, useEffect } from 'react';
               courses={student.courses}
             />
           ))}
-          
+          {filteredStudents.length === 0 && (
+              <div style={{ color: 'var(--text-muted)' }}>No students found matching "{searchQuery}".</div>
+          )}
         </div>
         )}
       </main>
