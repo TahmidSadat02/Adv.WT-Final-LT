@@ -3,6 +3,7 @@ import StudentCard from './components/StudentCard';
 import './App.css'; 
 import { useState, useEffect } from 'react';
 
+
   
   const MOCK_DB = [
     {
@@ -55,6 +56,7 @@ import { useState, useEffect } from 'react';
 
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchTimer = setTimeout(() => {
@@ -65,6 +67,14 @@ import { useState, useEffect } from 'react';
     return () => clearTimeout(fetchTimer);
   }, []);
 
+  const filteredStudents = students.filter((student) => {
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return (
+      student.name.toLowerCase().includes(lowerCaseQuery) ||
+      student.major.toLowerCase().includes(lowerCaseQuery)
+    );
+  });
+
   return (
     <div>
       <DashboardHeader 
@@ -73,14 +83,18 @@ import { useState, useEffect } from 'react';
       />
     
       <main style={{ padding: 'var(--spacing-lg) 40px' }}>
-        
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '40px', fontSize: '1.2rem', color: 'var(--text-muted)' }}>
+            Loading student data...
+          </div>
+        ) : (
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
           gap: 'var(--spacing-lg)' 
         }}>
           
-          {students.map((student) => (
+          {filteredStudents.map((student) => (
             <StudentCard 
               key={student.id}
               id={student.id}
@@ -93,6 +107,7 @@ import { useState, useEffect } from 'react';
           ))}
           
         </div>
+        )}
       </main>
     </div>
   );
