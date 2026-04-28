@@ -1,15 +1,21 @@
 import PropTypes from 'prop-types';
 import CourseTag from './CourseTag';
 import StatBadge from './StateBadge';
+import { useState } from 'react';
 
-export default function StudentCard({ name, id, avatar, gpa, major, courses }) {
-  // Using the CSS variables we defined earlier to keep styling consistent!
+export default function StudentCard({ name, id, avatar, gpa, major, courses, onTaggleFavourite }) {
+  const [isFavourite, setIsFavourite] = useState(false);
+  const handleFavouriteClick = () => {
+    setIsFavorite(newFavoriteStatus); 
+    onToggleFavorite(newFavoriteStatus);
+  }
   const cardStyle = {
     backgroundColor: 'var(--color-surface)',
     borderRadius: 'var(--radius-md)',
     padding: 'var(--spacing-lg)',
     boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
     border: '1px solid #e5e7eb',
+    borderColor: isFavourite ? '#ef4444' : '#e5e7eb',
     display: 'flex',
     flexDirection: 'column',
     gap: 'var(--spacing-md)'
@@ -72,5 +78,6 @@ StudentCard.propTypes = {
       name: PropTypes.string.isRequired,
       color: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  onTaggleFavourite: PropTypes.func.isRequired
 };

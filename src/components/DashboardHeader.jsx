@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export default function DashboardHeader({ title, tagline }) {
+export default function DashboardHeader({ title, tagline, favoriteCount }) {
   const headerStyle = {
     backgroundColor: 'var(--color-surface)',
     padding: 'var(--spacing-lg) 40px',
@@ -26,6 +26,15 @@ export default function DashboardHeader({ title, tagline }) {
       <nav style={navStyle}>
         <span style={{ cursor: 'pointer', color: 'var(--color-primary)' }}>Dashboard</span>
         <span style={{ cursor: 'pointer' }}>Settings</span>
+        <span style={{ 
+          backgroundColor: '#fee2e2', 
+          color: '#ef4444', 
+          padding: '4px 12px', 
+          borderRadius: 'var(--radius-full)',
+          fontWeight: 'bold'
+        }}>
+          ❤️ Favorites: {favoriteCount}
+        </span>
       </nav>
     </header>
   );
@@ -34,4 +43,5 @@ export default function DashboardHeader({ title, tagline }) {
 DashboardHeader.propTypes = {
   title: PropTypes.string.isRequired,
   tagline: PropTypes.string.isRequired,
+  favoriteCount: PropTypes.number.isRequired,
 };
