@@ -1,68 +1,69 @@
 import DashboardHeader from './components/DashboardHeader';
 import StudentCard from './components/StudentCard';
-import './App.css'; 
+import './App.css';
 import { useState, useEffect } from 'react';
 import SearchBar from './components/SearchBar';
 
 
-  
-  const MOCK_DB = [
-    {
-      id: "S-1001",
-      name: "Alice Johnson",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alice",
-      major: "Computer Science",
-      gpa: 3.8,
-      courses: [
-        { name: "Web Tech", color: "#4f46e5" },
-        { name: "Algorithms", color: "#10b981" }
-      ]
-    },
-    {
-      id: "S-1002",
-      name: "Bob Smith",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
-      major: "Data Science",
-      gpa: 3.5,
-      courses: [
-        { name: "Machine Learning", color: "#f59e0b" },
-        { name: "Statistics", color: "#8b5cf6" }
-      ]
-    },
-    {
-      id: "S-1003",
-      name: "Charlie Davis",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie",
-      major: "Software Engineering",
-      gpa: 3.9,
-      courses: [
-        { name: "System Design", color: "#ec4899" },
-        { name: "Testing", color: "#3b82f6" }
-      ]
-    },
-    {
-      id: "S-1004",
-      name: "Diana Prince",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Diana",
-      major: "Cybersecurity",
-      gpa: 3.7,
-      courses: [
-        { name: "Cryptography", color: "#ef4444" },
-        { name: "Networks", color: "#64748b" }
-      ]
-    }
-  ];
 
-  export default function App() {
+const MOCK_DB = [
+  {
+    id: "22-47904-2",
+    name: "Shahriar Asif",
+    avatar: "/image/asif.jpg",
+    major: "Computer Science",
+    gpa: 3.8,
+    courses: [
+      { name: "Web Tech", color: "#4f46e5" },
+      { name: "Algorithms", color: "#10b981" }
+    ]
+  },
+  {
+    id: "22-47888-2",
+    name: "SK. Nur Alam",
+    avatar: "/image/nur.jpg",
+    major: "Data Science",
+    gpa: 3.5,
+    courses: [
+      { name: "Machine Learning", color: "#f59e0b" },
+      { name: "Statistics", color: "#8b5cf6" }
+    ]
+  },
+  {
+    id: "22-47984-2",
+    name: "EA. Sabid",
+    avatar: "/image/sabid.jpg",
+    major: "Cybersecurity",
+    gpa: 3.9,
+    courses: [
+      { name: "System Design", color: "#ec4899" },
+      { name: "Testing", color: "#3b82f6" }
+    ]
+  },
+  {
+    id: "22-47924-2",
+    name: "Tahmid Sadat",
+    avatar: "/image/sadat.jpg",
+    major: "Software Engineering",
+    gpa: 3.7,
+    courses: [
+      { name: "Cryptography", color: "#ef4444" },
+      { name: "Networks", color: "#64748b" }
+    ]
+  }
+];
+
+export default function App() {
 
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [favoriteCount, setFavouriteCount] = useState(0);
 
   useEffect(() => {
     const fetchTimer = setTimeout(() => {
-      setStudents(MOCK_DB);    
-      setIsLoading(false); 
+      setStudents(MOCK_DB);
+      setIsLoading(false);
     }, 1500);
 
     return () => clearTimeout(fetchTimer);
@@ -78,44 +79,46 @@ import SearchBar from './components/SearchBar';
 
   return (
     <div>
-      <DashboardHeader 
-        title="Student Dashboard" 
-        tagline="Manage and view student records" 
-      />
-    
+
       <main style={{ padding: 'var(--spacing-lg) 40px' }}>
         {!isLoading && (
-          <SearchBar 
-            searchQuery={searchQuery} 
-            onSearchChange={setSearchQuery} 
+          <SearchBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
           />
         )}
+        <DashboardHeader
+          title="Student Dashboard"
+          tagline="Manage and view student records"
+          favoriteCount={favoriteCount}
+        />
         {isLoading ? (
           <div style={{ textAlign: 'center', padding: '40px', fontSize: '1.2rem', color: 'var(--text-muted)' }}>
             Loading student data...
           </div>
         ) : (
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-          gap: 'var(--spacing-lg)' 
-        }}>
-          
-          {filteredStudents.map((student) => (
-            <StudentCard 
-              key={student.id}
-              id={student.id}
-              name={student.name}
-              avatar={student.avatar}
-              major={student.major}
-              gpa={student.gpa}
-              courses={student.courses}
-            />
-          ))}
-          {filteredStudents.length === 0 && (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 'var(--spacing-lg)'
+          }}>
+
+            {filteredStudents.map((student) => (
+              <StudentCard
+                key={student.id}
+                id={student.id}
+                name={student.name}
+                avatar={student.avatar}
+                major={student.major}
+                gpa={student.gpa}
+                courses={student.courses}
+                onToggleFavourite={(isFav) => setFavouriteCount(prev => isFav ? prev + 1 : prev - 1)}
+              />
+            ))}
+            {filteredStudents.length === 0 && (
               <div style={{ color: 'var(--text-muted)' }}>No students found matching "{searchQuery}".</div>
-          )}
-        </div>
+            )}
+          </div>
         )}
       </main>
     </div>
