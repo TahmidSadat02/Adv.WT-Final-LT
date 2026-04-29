@@ -3,19 +3,20 @@ import CourseTag from './CourseTag';
 import StatBadge from './StateBadge';
 import { useState } from 'react';
 
-export default function StudentCard({ name, id, avatar, gpa, major, courses, onTaggleFavourite }) {
-  const [isFavourite, setIsFavourite] = useState(false);
-  const handleFavouriteClick = () => {
-    setIsFavorite(newFavoriteStatus); 
+export default function StudentCard({ name, id, avatar, gpa, major, courses, onToggleFavorite }) {
+  const [isFavorite, setIsFavorite] = useState(false);
+  const handleFavoriteClick = () => {
+    const newFavoriteStatus = !isFavorite;
+    setIsFavorite(newFavoriteStatus);
     onToggleFavorite(newFavoriteStatus);
-  }
+  };
   const cardStyle = {
     backgroundColor: 'var(--color-surface)',
     borderRadius: 'var(--radius-md)',
     padding: 'var(--spacing-lg)',
     boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
     border: '1px solid #e5e7eb',
-    borderColor: isFavourite ? '#ef4444' : '#e5e7eb',
+    borderColor: isFavorite ? '#ef4444' : '#e5e7eb',
     display: 'flex',
     flexDirection: 'column',
     gap: 'var(--spacing-md)'
@@ -36,7 +37,6 @@ export default function StudentCard({ name, id, avatar, gpa, major, courses, onT
 
   return (
     <div style={cardStyle}>
-      {/* 1. Header with Avatar and Name */}
       <div style={headerStyle}>
         <img src={avatar} alt={`${name}'s profile`} style={avatarStyle} />
         <div>
@@ -45,13 +45,28 @@ export default function StudentCard({ name, id, avatar, gpa, major, courses, onT
         </div>
       </div>
 
-      {/* 2. Reusing our StatBadge atom for Major and GPA */}
+      <button
+        onClick={handleFavoriteClick}
+        style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px',
+            color: isFavorite ? '#ef4444' : '#d1d5db',
+            transition: 'color 0.2s ease'
+          }}
+          aria-label="Toggle Favorite"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill={isFavorite ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+      </button>
+
       <div style={{ display: 'flex', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
         <StatBadge label="Major" value={major} />
         <StatBadge label="GPA" value={gpa.toFixed(2)} />
       </div>
 
-      {/* 3. Reusing our CourseTag atom for Enrolled Courses */}
       <div>
         <h4 style={{ margin: '0 0 var(--spacing-sm) 0', color: 'var(--text-main)', fontSize: '0.9rem' }}>
           Enrolled Courses:
@@ -66,7 +81,6 @@ export default function StudentCard({ name, id, avatar, gpa, major, courses, onT
   );
 }
 
-// Strict PropTypes validation as required by the lab
 StudentCard.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
@@ -79,5 +93,5 @@ StudentCard.propTypes = {
       color: PropTypes.string.isRequired
     })
   ).isRequired,
-  onTaggleFavourite: PropTypes.func.isRequired
+  onToggleFavorite: PropTypes.func.isRequired
 };

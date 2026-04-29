@@ -33,7 +33,7 @@ export default function DashboardHeader({ title, tagline, favoriteCount }) {
           borderRadius: 'var(--radius-full)',
           fontWeight: 'bold'
         }}>
-          ❤️ Favorites: {favoriteCount}
+          Favorites: {favoriteCount}
         </span>
       </nav>
     </header>

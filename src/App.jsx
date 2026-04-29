@@ -3,6 +3,7 @@ import StudentCard from './components/StudentCard';
 import './App.css';
 import { useState, useEffect } from 'react';
 import SearchBar from './components/SearchBar';
+import SortControls from './components/SortControls';
 
 
 
@@ -59,6 +60,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [favoriteCount, setFavoriteCount] = useState(0);
+  const [sortOrder, setSortOrder] = useState('default');
 
   useEffect(() => {
     const fetchTimer = setTimeout(() => {
@@ -79,11 +81,22 @@ export default function App() {
     );
   });
 
-  // Task 4: Dynamic Document Title
+
   useEffect(() => {
-    // Update the browser tab whenever filteredStudents changes
-    document.title = `Dashboard - ${filteredStudents.length} Students`;
-  }, [filteredStudents.length]); // This dependency array tells React to only run this when the count changes
+    if (!isLoading) {
+      document.title = `Dashboard - ${filteredStudents.length} Students`;
+    }
+  }, [filteredStudents.length, isLoading]); // This dependency array tells React to only run this when the count changes
+
+  const sortedAndFilteredStudents = [...filteredStudents].sort((a, b) => {
+    if (sortOrder === 'name') {
+      return a.name.localeCompare(b.name); 
+    }
+    if (sortOrder === 'gpa') {
+      return b.gpa - a.gpa;
+    }
+    return 0; 
+  });
 
   return (
     <div>
@@ -100,10 +113,28 @@ export default function App() {
           tagline="Manage and view student records"
           favoriteCount={favoriteCount}
         />
+        {!isLoading && (
+          <SortControls
+            sortOrder={sortOrder}
+            onSortChange={setSortOrder}
+          />
+        )}
         {isLoading ? (
-          <div style={{ textAlign: 'center', padding: '40px', fontSize: '1.2rem', color: 'var(--text-muted)' }}>
-            Loading student data...
-          </div>
+          <>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+              <SearchBar 
+                searchQuery={searchQuery} 
+                onSearchChange={setSearchQuery} 
+              />
+              <SortControls
+                sortOrder={sortOrder}
+                onSortChange={setSortOrder}
+              />
+            </div>
+            <div style={{ textAlign: 'center', padding: '40px', fontSize: '1.2rem', color: 'var(--text-muted)' }}>
+              Loading student data...
+            </div>
+          </>
         ) : (
           <div style={{
             display: 'grid',
@@ -111,7 +142,7 @@ export default function App() {
             gap: 'var(--spacing-lg)'
           }}>
 
-            {filteredStudents.map((student) => (
+            {sortedAndFilteredStudents.map((student) => (
               <StudentCard
                 key={student.id}
                 id={student.id}
