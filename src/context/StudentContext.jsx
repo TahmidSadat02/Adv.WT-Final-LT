@@ -52,19 +52,20 @@ const MOCK_DB = [
 ];
 
 export function StudentProvider({ children }) {
+  
   const [students, setStudents] = useState(() => {
     try {
       const storedStudents = localStorage.getItem(STUDENTS_STORAGE_KEY);
-      if (!storedStudents) {
-        return MOCK_DB;
+      if (storedStudents) {
+        const parsedStudents = JSON.parse(storedStudents);
+        return Array.isArray(parsedStudents) ? parsedStudents : MOCK_DB;
       }
-
-      const parsedStudents = JSON.parse(storedStudents);
-      return Array.isArray(parsedStudents) ? parsedStudents : MOCK_DB;
+      return MOCK_DB;
     } catch {
       return MOCK_DB;
     }
   });
+
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState('default');
   const [favoriteCount, setFavoriteCount] = useState(0);
@@ -84,14 +85,14 @@ export function StudentProvider({ children }) {
     setNotification('Student removed successfully.');
   };
 
+  
   useEffect(() => {
     localStorage.setItem(STUDENTS_STORAGE_KEY, JSON.stringify(students));
   }, [students]);
 
+  
   useEffect(() => {
-    if (!notification) {
-      return undefined;
-    }
+    if (!notification) return;
 
     const clearNotificationTimer = setTimeout(() => {
       setNotification('');
