@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import SearchBar from './components/SearchBar';
 import SortControls from './components/SortControls';
 import { StudentContext } from './context/StudentContext';
+import AddStudentForm from './components/AddStudentForm';
 
 export default function App() {
   const { students, searchQuery, sortOrder, favoriteCount } = useContext(StudentContext);
@@ -50,6 +51,7 @@ export default function App() {
     <div>
 
       <main style={{ padding: 'var(--spacing-lg) 40px' }}>
+        <AddStudentForm />
         {!isLoading && (
           <SearchBar />
         )}
