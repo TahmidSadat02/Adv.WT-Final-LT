@@ -67,6 +67,9 @@ export default function App() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)', marginBottom: '20px' }}>
               <SearchBar />
               <SortControls />
+              <p style={{ margin: 0, color: 'var(--text-muted)', fontWeight: 600 }}>
+                Showing {sortedAndFilteredStudents.length} {sortedAndFilteredStudents.length === 1 ? 'student' : 'students'}
+              </p>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-lg)' }}>
