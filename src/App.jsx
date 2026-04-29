@@ -67,6 +67,8 @@ export default function App() {
     }, 1500);
 
     return () => clearTimeout(fetchTimer);
+
+    
   }, []);
 
   const filteredStudents = students.filter((student) => {
@@ -76,6 +78,12 @@ export default function App() {
       student.major.toLowerCase().includes(lowerCaseQuery)
     );
   });
+
+  // Task 4: Dynamic Document Title
+  useEffect(() => {
+    // Update the browser tab whenever filteredStudents changes
+    document.title = `Dashboard - ${filteredStudents.length} Students`;
+  }, [filteredStudents.length]); // This dependency array tells React to only run this when the count changes
 
   return (
     <div>
