@@ -12,7 +12,7 @@ const MOCK_DB = [
     name: "Shahriar Asif",
     avatar: "/image/asif.jpg",
     major: "Computer Science",
-    gpa: 3.8,
+    gpa: 3.75,
     courses: [
       { name: "Web Tech", color: "#4f46e5" },
       { name: "Algorithms", color: "#10b981" }
@@ -23,7 +23,7 @@ const MOCK_DB = [
     name: "SK. Nur Alam",
     avatar: "/image/nur.jpg",
     major: "Data Science",
-    gpa: 3.5,
+    gpa: 3.80,
     courses: [
       { name: "Machine Learning", color: "#f59e0b" },
       { name: "Statistics", color: "#8b5cf6" }
@@ -45,7 +45,7 @@ const MOCK_DB = [
     name: "Tahmid Sadat",
     avatar: "/image/sadat.jpg",
     major: "Software Engineering",
-    gpa: 3.7,
+    gpa: 2.7,
     courses: [
       { name: "Cryptography", color: "#ef4444" },
       { name: "Networks", color: "#64748b" }
@@ -58,7 +58,7 @@ export default function App() {
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [favoriteCount, setFavouriteCount] = useState(0);
+  const [favoriteCount, setFavoriteCount] = useState(0);
 
   useEffect(() => {
     const fetchTimer = setTimeout(() => {
@@ -112,7 +112,7 @@ export default function App() {
                 major={student.major}
                 gpa={student.gpa}
                 courses={student.courses}
-                onToggleFavourite={(isFav) => setFavouriteCount(prev => isFav ? prev + 1 : prev - 1)}
+                onToggleFavorite={(isFav) => setFavoriteCount(prev => isFav ? prev + 1 : Math.max(0, prev - 1))}
               />
             ))}
             {filteredStudents.length === 0 && (
