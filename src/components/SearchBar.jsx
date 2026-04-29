@@ -1,13 +1,17 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { StudentContext } from '../context/StudentContext';
 
-export default function SearchBar({ searchQuery, onSearchChange }) {
+export default function SearchBar() {
+  const { searchQuery, setSearchQuery } = useContext(StudentContext);
+
   return (
     <div style={{ marginBottom: 'var(--spacing-lg)' }}>
       <input
         type="text"
         placeholder="Search students by name or major..."
         value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
+        onChange={(e) => setSearchQuery(e.target.value)}
         style={{
           width: '100%',
           maxWidth: '500px',
@@ -22,8 +26,3 @@ export default function SearchBar({ searchQuery, onSearchChange }) {
     </div>
   );
 }
-
-SearchBar.propTypes = {
-  searchQuery: PropTypes.string.isRequired,
-  onSearchChange: PropTypes.func.isRequired,
-};

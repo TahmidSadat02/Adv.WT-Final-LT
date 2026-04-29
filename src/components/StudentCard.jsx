@@ -1,14 +1,16 @@
 import PropTypes from 'prop-types';
 import CourseTag from './CourseTag';
 import StatBadge from './StateBadge';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { StudentContext } from '../context/StudentContext';
 
-export default function StudentCard({ name, id, avatar, gpa, major, courses, onToggleFavorite }) {
+export default function StudentCard({ name, id, avatar, gpa, major, courses }) {
+  const { handleToggleFavorite } = useContext(StudentContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const handleFavoriteClick = () => {
     const newFavoriteStatus = !isFavorite;
     setIsFavorite(newFavoriteStatus);
-    onToggleFavorite(newFavoriteStatus);
+    handleToggleFavorite(newFavoriteStatus);
   };
   const cardStyle = {
     backgroundColor: 'var(--color-surface)',
@@ -93,5 +95,4 @@ StudentCard.propTypes = {
       color: PropTypes.string.isRequired
     })
   ).isRequired,
-  onToggleFavorite: PropTypes.func.isRequired
 };

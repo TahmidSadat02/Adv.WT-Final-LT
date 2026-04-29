@@ -1,7 +1,11 @@
 
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { StudentContext } from '../context/StudentContext';
 
-export default function SortControls({ sortOrder, onSortChange }) {
+export default function SortControls() {
+  const { sortOrder, setSortOrder } = useContext(StudentContext);
+
   const buttonStyle = (isActive) => ({
     padding: '8px 16px',
     borderRadius: 'var(--radius-md)',
@@ -16,13 +20,13 @@ export default function SortControls({ sortOrder, onSortChange }) {
   return (
     <div style={{ display: 'flex', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-lg)', alignItems: 'center' }}>
       <span style={{ fontWeight: 'bold', color: 'var(--text-main)' }}>Sort By:</span>
-      <button style={buttonStyle(sortOrder === 'default')} onClick={() => onSortChange('default')}>
+      <button style={buttonStyle(sortOrder === 'default')} onClick={() => setSortOrder('default')}>
         Default
       </button>
-      <button style={buttonStyle(sortOrder === 'name')} onClick={() => onSortChange('name')}>
+      <button style={buttonStyle(sortOrder === 'name')} onClick={() => setSortOrder('name')}>
         Name (A-Z)
       </button>
-      <button style={buttonStyle(sortOrder === 'gpa')} onClick={() => onSortChange('gpa')}>
+      <button style={buttonStyle(sortOrder === 'gpa')} onClick={() => setSortOrder('gpa')}>
         GPA (High - Low)
       </button>
     </div>
@@ -30,6 +34,6 @@ export default function SortControls({ sortOrder, onSortChange }) {
 }
 
 SortControls.propTypes = {
-  sortOrder: PropTypes.string.isRequired,
-  onSortChange: PropTypes.func.isRequired,
+  sortOrder: PropTypes.string,
+  onSortChange: PropTypes.func,
 };
