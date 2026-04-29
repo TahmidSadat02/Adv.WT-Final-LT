@@ -5,6 +5,7 @@ export default function AddStudentForm() {
   const { students } = useContext(StudentContext);
   const [formData, setFormData] = useState({ name: '', id: '', major: '', gpa: '', courses: '' });
   const [errors, setErrors] = useState({});
+  const { addStudent } = useContext(StudentContext);
 
   const validateForm = () => {
     const newErrors = {};
@@ -25,7 +26,15 @@ export default function AddStudentForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      alert("Form is valid! Ready for Task 4.");
+      const newStudent = {
+     id: formData.id,
+      name: formData.name,
+      major: formData.major,
+      gpa: parseFloat(formData.gpa),
+      courses: formData.courses ? formData.courses.split(',') : [],};
+        addStudent(newStudent);
+        setFormData({ name: '', id: '', major: '', gpa: '', courses: '' }); // Reset form
+        setErrors({});
     }
   };
 

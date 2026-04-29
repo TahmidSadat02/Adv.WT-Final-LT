@@ -1,102 +1,81 @@
+import { useContext, useEffect, useState } from 'react';
 import DashboardHeader from './components/DashboardHeader';
 import StudentCard from './components/StudentCard';
-import './App.css';
-import { useContext, useEffect, useState } from 'react';
 import SearchBar from './components/SearchBar';
 import SortControls from './components/SortControls';
-import { StudentContext } from './context/StudentContext';
 import AddStudentForm from './components/AddStudentForm';
+import { StudentContext } from './context/StudentContext';
 
 export default function App() {
-  const { students, searchQuery, sortOrder, favoriteCount } = useContext(StudentContext);
-
+  const { students, searchQuery, sortOrder, favoriteCount, notification } = useContext(StudentContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTimer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
+    const fetchTimer = setTimeout(() => setIsLoading(false), 1500);
     return () => clearTimeout(fetchTimer);
-
-    
   }, []);
 
   const filteredStudents = students.filter((student) => {
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    return (
-      student.name.toLowerCase().includes(lowerCaseQuery) ||
-      student.major.toLowerCase().includes(lowerCaseQuery)
-    );
+    const query = searchQuery.toLowerCase();
+    return student.name.toLowerCase().includes(query) || student.major.toLowerCase().includes(query);
   });
-
 
   useEffect(() => {
     if (!isLoading) {
-      document.title = `Dashboard - ${filteredStudents.length} Students`;
+      document.title = `Dashboard - ${filteredStudents.length} Students`; 
     }
-  }, [filteredStudents.length, isLoading]); // This dependency array tells React to only run this when the count changes
+  }, [filteredStudents.length, isLoading]);
 
   const sortedAndFilteredStudents = [...filteredStudents].sort((a, b) => {
-    if (sortOrder === 'name') {
-      return a.name.localeCompare(b.name); 
-    }
-    if (sortOrder === 'gpa') {
-      return b.gpa - a.gpa;
-    }
+    if (sortOrder === 'name') return a.name.localeCompare(b.name); 
+    if (sortOrder === 'gpa') return b.gpa - a.gpa;
     return 0; 
   });
 
   return (
     <div>
 
+      <DashboardHeader
+        title="Student Dashboard"
+        tagline="Manage and view student records"
+        favoriteCount={favoriteCount}
+      />
+
+      {notification && (
+        <div
+          style={{
+            margin: '16px 40px 0',
+            padding: '12px 16px',
+            borderRadius: 'var(--radius-md)',
+            backgroundColor: '#dcfce7',
+            color: '#166534',
+            border: '1px solid #86efac',
+            fontWeight: 600,
+          }}
+        >
+          {notification}
+        </div>
+      )}
+
       <main style={{ padding: 'var(--spacing-lg) 40px' }}>
         <AddStudentForm />
-        {!isLoading && (
-          <SearchBar />
-        )}
-        <DashboardHeader
-          title="Student Dashboard"
-          tagline="Manage and view student records"
-          favoriteCount={favoriteCount}
-        />
-        {!isLoading && (
-          <SortControls />
-        )}
+
         {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '40px' }}>Loading...</div>
+        ) : (
           <>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)', marginBottom: '20px' }}>
               <SearchBar />
               <SortControls />
             </div>
-            <div style={{ textAlign: 'center', padding: '40px', fontSize: '1.2rem', color: 'var(--text-muted)' }}>
-              Loading student data...
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-lg)' }}>
+              {sortedAndFilteredStudents.map((student) => (
+                <StudentCard key={student.id} {...student} />
+              ))}
             </div>
           </>
-        ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: 'var(--spacing-lg)'
-          }}>
-
-            {sortedAndFilteredStudents.map((student) => (
-              <StudentCard
-                key={student.id}
-                id={student.id}
-                name={student.name}
-                avatar={student.avatar}
-                major={student.major}
-                gpa={student.gpa}
-                courses={student.courses}
-              />
-            ))}
-            {filteredStudents.length === 0 && (
-              <div style={{ color: 'var(--text-muted)' }}>No students found matching "{searchQuery}".</div>
-            )}
-          </div>
         )}
       </main>
     </div>
-  );
-}
+  );}

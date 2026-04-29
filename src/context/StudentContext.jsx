@@ -1,7 +1,8 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 export const StudentContext = createContext();
+const STUDENTS_STORAGE_KEY = 'students';
 
 const MOCK_DB = [
   {
@@ -51,24 +52,66 @@ const MOCK_DB = [
 ];
 
 export function StudentProvider({ children }) {
-  const [students] = useState(MOCK_DB);
+  const [students, setStudents] = useState(() => {
+    try {
+      const storedStudents = localStorage.getItem(STUDENTS_STORAGE_KEY);
+      if (!storedStudents) {
+        return MOCK_DB;
+      }
+
+      const parsedStudents = JSON.parse(storedStudents);
+      return Array.isArray(parsedStudents) ? parsedStudents : MOCK_DB;
+    } catch {
+      return MOCK_DB;
+    }
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState('default');
   const [favoriteCount, setFavoriteCount] = useState(0);
+  const [notification, setNotification] = useState('');
 
   const handleToggleFavorite = (isFavorite) => {
     setFavoriteCount((prevCount) => (isFavorite ? prevCount + 1 : Math.max(0, prevCount - 1)));
   };
 
+  const addStudent = (newStudent) => {
+    setStudents((prev) => [...prev, newStudent]);
+    setNotification(`${newStudent.name} was added successfully.`);
+  };
+
+  const removeStudent = (id) => {
+    setStudents((prev) => prev.filter((student) => student.id !== id));
+    setNotification('Student removed successfully.');
+  };
+
+  useEffect(() => {
+    localStorage.setItem(STUDENTS_STORAGE_KEY, JSON.stringify(students));
+  }, [students]);
+
+  useEffect(() => {
+    if (!notification) {
+      return undefined;
+    }
+
+    const clearNotificationTimer = setTimeout(() => {
+      setNotification('');
+    }, 3000);
+
+    return () => clearTimeout(clearNotificationTimer);
+  }, [notification]);
+
   return (
     <StudentContext.Provider
       value={{
         students,
+        addStudent,
+        removeStudent,
         searchQuery,
         setSearchQuery,
         sortOrder,
         setSortOrder,
         favoriteCount,
+        notification,
         handleToggleFavorite,
       }}
     >

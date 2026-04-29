@@ -5,7 +5,7 @@ import { useContext, useState } from 'react';
 import { StudentContext } from '../context/StudentContext';
 
 export default function StudentCard({ name, id, avatar, gpa, major, courses }) {
-  const { handleToggleFavorite } = useContext(StudentContext);
+  const { handleToggleFavorite, removeStudent } = useContext(StudentContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const handleFavoriteClick = () => {
     const newFavoriteStatus = !isFavorite;
@@ -79,6 +79,22 @@ export default function StudentCard({ name, id, avatar, gpa, major, courses }) {
           ))}
         </div>
       </div>
+
+      <button
+        onClick={() => removeStudent(id)}
+        style={{
+          marginTop: 'var(--spacing-sm)',
+          padding: '8px 12px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid #ef4444',
+          backgroundColor: '#fef2f2',
+          color: '#b91c1c',
+          cursor: 'pointer',
+          fontWeight: 600,
+        }}
+      >
+        Remove Student
+      </button>
     </div>
   );
 }
